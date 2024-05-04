@@ -1,16 +1,34 @@
-// main.js
+//const {Translate} = require('@google-cloud/translate').v2;
+//const projectId = 'YOUR_PROJECT_ID';
+//const translate = new Translate({projectId});
+
+
 
 // Modules to control application life and create native browser window
 const { app, BrowserWindow,globalShortcut } = require('electron')
 //var Mousetrap = require('Mousetrap');
 const path = require('node:path')
 
+
+
+//var Speech = require('electron-speech')
+
+// var recog = Speech({
+//   lang: 'en-US',
+//   continuous: true
+// })
+// recog.on('text', function (text) {
+//   console.log(text)
+// });
+ 
+// recog.listen();
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
+      nodeIntegration:true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -19,17 +37,30 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
   mainWindow.webContents.on('before-input-event', (event, input) => {
-    if (input.control && input.key.toLowerCase() === 'i') {
-      console.log('Pressed Control+I')
-      event.preventDefault()
+    const key=input.key.toLowerCase();
+    console.log('before-input-event Pressed key:', key,input);
+    if(input.type=='keyUp'){
+      mainWindow.webContents.send('key-released', key);
     }
+    else if(input.type=='keyDown'){
+      mainWindow.webContents.send('key-pressed', key);
+    }
+    // if (input.control && input.key.toLowerCase() === 'i') {
+    //   console.log('Pressed Control+I')
+    //   event.preventDefault()
+    // }
   })
+
+
+
+
 
   //Mousetrap.bind('4', () => { console.log('4') })
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
