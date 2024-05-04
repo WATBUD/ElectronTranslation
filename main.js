@@ -54,7 +54,7 @@ const createWindow = () => {
 
   const ret = globalShortcut.register('CommandOrControl+T', () => {
 
-    ks.sendCombination(['control', 'c']);
+    //ks.sendCombination(['control', 'c']);
     mainWindow.webContents.send('ctrl-t-pressed');
   }, true);
   if (!ret) {
