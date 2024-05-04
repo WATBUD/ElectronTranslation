@@ -1,14 +1,12 @@
 //const {Translate} = require('@google-cloud/translate').v2;
 //const projectId = 'YOUR_PROJECT_ID';
 //const translate = new Translate({projectId});
-
-
-
 // Modules to control application life and create native browser window
 const { app, BrowserWindow,globalShortcut } = require('electron')
 //var Mousetrap = require('Mousetrap');
 const path = require('node:path')
 
+var ks = require('node-key-sender');
 
 
 //var Speech = require('electron-speech')
@@ -37,28 +35,37 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
   mainWindow.webContents.on('before-input-event', (event, input) => {
-    const key=input.key.toLowerCase();
-    console.log('before-input-event Pressed key:', key,input);
-    if(input.type=='keyUp'){
-      mainWindow.webContents.send('key-released', key);
-    }
-    else if(input.type=='keyDown'){
-      mainWindow.webContents.send('key-pressed', key);
-    }
+    // const key=input.key.toLowerCase();
+    // console.log('before-input-event Pressed key:', 
+    // key
+    // //,input
+    // );
+    // if(input.type=='keyUp'){
+    //   mainWindow.webContents.send('key-released', key);
+    // }
+    // else if(input.type=='keyDown'){
+    //   mainWindow.webContents.send('key-pressed', key);
+    // }
     // if (input.control && input.key.toLowerCase() === 'i') {
     //   console.log('Pressed Control+I')
     //   event.preventDefault()
     // }
   })
 
+  const ret = globalShortcut.register('CommandOrControl+T', () => {
 
-
+    ks.sendCombination(['control', 'c']);
+    mainWindow.webContents.send('ctrl-t-pressed');
+  }, true);
+  if (!ret) {
+    console.log('注册快捷键失败！');
+  }
 
 
   //Mousetrap.bind('4', () => { console.log('4') })
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 }
 
 
